@@ -15,6 +15,15 @@ export default function AppLayout() {
           sheetCornerRadius: 24,
         }}
       />
+      <Stack.Screen
+        name="order/[id]"
+        options={{
+          presentation: 'formSheet',
+          sheetAllowedDetents: 'fitToContents',
+          sheetGrabberVisible: true,
+          sheetCornerRadius: 24,
+        }}
+      />
       <Stack.Screen name="cart" />
       <Stack.Screen name="checkout" />
       {/* No swipe back: the screen redirects to orders on its own. */}

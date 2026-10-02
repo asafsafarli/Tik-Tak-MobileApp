@@ -2,14 +2,13 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, fonts, radius, spacing } from '@/constants/theme';
-import { useBasket } from '@/hooks/useBasket';
+import { useBasketSummary } from '@/hooks/useBasket';
 
 export const BASKET_BAR_HEIGHT = 46;
 
-/** Floating "② Sifarişlər   ₼ 15.70" bar shown while the basket has items. */
 export function BasketBar() {
-  const { data: basket } = useBasket();
-  if (!basket || basket.count === 0) return null;
+  const { count, total } = useBasketSummary();
+  if (count === 0) return null;
 
   return (
     <Pressable
@@ -17,11 +16,11 @@ export function BasketBar() {
       style={({ pressed }) => [styles.bar, pressed && styles.pressed]}>
       <View style={styles.left}>
         <View style={styles.count}>
-          <Text style={styles.countText}>{basket.count}</Text>
+          <Text style={styles.countText}>{count}</Text>
         </View>
         <Text style={styles.text}>Sifarişlər</Text>
       </View>
-      <Text style={styles.text}>₼ {Number(basket.total).toFixed(2)}</Text>
+      <Text style={styles.text}>₼ {Number(total).toFixed(2)}</Text>
     </Pressable>
   );
 }

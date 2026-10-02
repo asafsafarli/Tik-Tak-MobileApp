@@ -9,7 +9,7 @@ import { formatPrice, measureLabel } from '@/utils/format';
 
 export function BasketItemRow({ item }: { item: BasketItem }) {
   const { product, quantity } = item;
-  const { add, remove, removeAll, isPending } = useBasketActions(product.id);
+  const { add, remove, removeAll } = useBasketActions(product);
   const isLast = quantity <= 1;
 
   return (
@@ -22,18 +22,20 @@ export function BasketItemRow({ item }: { item: BasketItem }) {
         <Text style={styles.price}>{formatPrice(product.price)}</Text>
       </View>
 
-      <View style={[styles.stepper, isPending && styles.pending]}>
+      <View style={styles.stepper}>
         <Pressable
           accessibilityLabel={isLast ? 'Səbətdən sil' : 'Azalt'}
-          disabled={isPending}
           onPress={isLast ? removeAll : remove}
           style={({ pressed }) => [styles.stepButton, pressed && styles.stepPressed]}>
-          <Feather name={isLast ? 'trash-2' : 'minus'} size={isLast ? 15 : 18} color={colors.white} />
+          <Feather
+            name={isLast ? 'trash-2' : 'minus'}
+            size={isLast ? 15 : 18}
+            color={colors.white}
+          />
         </Pressable>
         <Text style={styles.quantity}>{quantity}</Text>
         <Pressable
           accessibilityLabel="Artır"
-          disabled={isPending}
           onPress={add}
           style={({ pressed }) => [styles.stepButton, pressed && styles.stepPressed]}>
           <Feather name="plus" size={18} color={colors.white} />
@@ -78,9 +80,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 4,
-  },
-  pending: {
-    opacity: 0.6,
   },
   stepButton: {
     width: 26,

@@ -55,7 +55,6 @@ export default function CheckoutScreen() {
   };
 
   return (
-    // The summary card runs into the bottom safe area, so pad it manually.
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScreenHeader title="Sifarişi tamamla" />
       <KeyboardAvoidingView
@@ -177,6 +176,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: 12,
     paddingVertical: 2,
+    paddingHorizontal: 0,
   },
   textarea: {
     height: 90,

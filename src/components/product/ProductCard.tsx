@@ -1,17 +1,24 @@
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
 import type { Product } from '@/api';
-import { colors, fonts, radius, shadow } from '@/constants/theme';
+import { colors, fonts, radius, shadow, spacing } from '@/constants/theme';
 import { measureLabel } from '@/utils/format';
 
 import { AddToBasket } from './AddToBasket';
 import { ProductImage } from './ProductImage';
 import { ProductPrice } from './ProductPrice';
 
+/** Gap between the two grid columns. */
+export const PRODUCT_GRID_GAP = 12;
+
 export function ProductCard({ product }: { product: Product }) {
+  // Fixed half width so a lone card in the last row doesn't stretch.
+  const { width } = useWindowDimensions();
+  const cardWidth = (width - spacing.screen * 2 - PRODUCT_GRID_GAP) / 2;
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { width: cardWidth }]}>
       <Pressable
         onPress={() => router.push({ pathname: '/product/[id]', params: { id: product.id } })}
         style={({ pressed }) => [styles.body, pressed && styles.pressed]}>
@@ -29,7 +36,6 @@ export function ProductCard({ product }: { product: Product }) {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
     borderRadius: radius.card,
     backgroundColor: colors.background,
     borderWidth: 1,

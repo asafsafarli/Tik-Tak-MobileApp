@@ -25,7 +25,15 @@
       "expo-secure-store",
       "expo-router",
       "expo-image",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Profil şəklini seçmək üçün TikTak qalereyanıza giriş istəyir.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "tiktak",
     "experiments": {

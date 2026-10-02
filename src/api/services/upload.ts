@@ -9,6 +9,8 @@ export const uploadService = {
     form.append('file', file as unknown as Blob);
     const res = await api.post<UploadResult>('/upload', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      // Hand FormData to React Native untouched; axios would otherwise try to serialize it.
+      transformRequest: (data) => data,
     });
     return res.url;
   },

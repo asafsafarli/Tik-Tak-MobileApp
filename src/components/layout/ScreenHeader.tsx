@@ -8,19 +8,22 @@ interface ScreenHeaderProps {
   title: string;
   /** Defaults to going back one screen. */
   onBack?: () => void;
+  showBack?: boolean;
 }
 
-export function ScreenHeader({ title, onBack }: ScreenHeaderProps) {
+export function ScreenHeader({ title, onBack, showBack = true }: ScreenHeaderProps) {
   return (
     <View style={styles.header}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Geri"
-        hitSlop={12}
-        onPress={onBack ?? (() => router.back())}
-        style={styles.back}>
-        <Feather name="arrow-left" size={24} color={colors.title} />
-      </Pressable>
+      {showBack && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Geri"
+          hitSlop={12}
+          onPress={onBack ?? (() => router.back())}
+          style={styles.back}>
+          <Feather name="arrow-left" size={24} color={colors.title} />
+        </Pressable>
+      )}
       <Text style={styles.title} numberOfLines={1}>
         {title}
       </Text>

@@ -23,7 +23,7 @@ export function formatPrice(value: string | number): string {
 }
 
 const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
-  PENDING: 'Gözləmədə',
+  PENDING: 'Sifariş qəbul edilib',
   CONFIRMED: 'Təsdiqləndi',
   PREPARING: 'Hazırlanır',
   READY: 'Hazırdır',
@@ -33,6 +33,13 @@ const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 
 export function orderStatusLabel(status: OrderStatus): string {
   return ORDER_STATUS_LABELS[status] ?? status;
+}
+
+/** "2026-10-01T15:36:54Z" → "01.10.2026" */
+export function formatDate(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
 }
 
 /** "2026-10-01T15:36:54Z" → "01.10.2026, 19:36" */

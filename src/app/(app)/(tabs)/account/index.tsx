@@ -1,56 +1,90 @@
 import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppHeader } from '@/components/layout/AppHeader';
-import { Button } from '@/components/ui/Button';
-import { colors, fonts, radius, spacing } from '@/constants/theme';
+import { AvatarPicker } from '@/components/account/AvatarPicker';
+import { MenuItem } from '@/components/account/MenuItem';
+import { ScreenHeader } from '@/components/layout/ScreenHeader';
+import { colors, fonts } from '@/constants/theme';
 import { useAuth } from '@/context/AuthContext';
 
-// Temporary layout until the account design is ready.
+const ICON_SIZE = 22;
+
 export default function AccountScreen() {
   const { profile, logout } = useAuth();
 
+  const confirmLogout = () =>
+    Alert.alert('Çıxış', 'Hesabdan çıxmaq istədiyinizə əminsiniz?', [
+      { text: 'Ləğv et', style: 'cancel' },
+      { text: 'Çıxış', style: 'destructive', onPress: logout },
+    ]);
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <AppHeader />
-      <View style={styles.content}>
+      <ScreenHeader title="Hesabım" showBack={false} />
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.profile}>
+          <AvatarPicker />
           <Text style={styles.name}>{profile?.full_name}</Text>
           <Text style={styles.phone}>{profile?.phone}</Text>
         </View>
 
-        <Pressable
+        <MenuItem
+          label="Hesab məlumatlarım"
+          icon={
+            <MaterialCommunityIcons
+              name="card-account-details-outline"
+              size={ICON_SIZE}
+              color={colors.title}
+            />
+          }
+          onPress={() => router.push('/account/info')}
+        />
+        <MenuItem
+          label="Siyahılarım"
+          icon={<Feather name="heart" size={ICON_SIZE} color={colors.title} />}
+          onPress={() => router.push('/account/favorites')}
+        />
+        <MenuItem
+          label="Sifariş tarixçəsi"
+          icon={<Feather name="clock" size={ICON_SIZE} color={colors.title} />}
           onPress={() => router.push('/account/orders')}
-          style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
-          <Feather name="package" size={20} color={colors.title} />
-          <Text style={styles.rowText}>Sifarişlərim</Text>
-          <Feather name="chevron-right" size={20} color={colors.muted} />
-        </Pressable>
-
-        <Button title="Çıxış" onPress={logout} style={styles.logout} />
-      </View>
+        />
+        <MenuItem
+          label="Çıxış"
+          icon={<Feather name="log-out" size={ICON_SIZE} color={colors.title} />}
+          onPress={confirmLogout}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.screen, gap: 16 },
-  profile: { alignItems: 'center', gap: 4, paddingVertical: 16 },
-  name: { color: colors.title, fontFamily: fonts.medium, fontSize: 20 },
-  phone: { color: colors.muted, fontFamily: fonts.regular, fontSize: 14 },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    height: 52,
-    paddingHorizontal: 16,
-    borderRadius: radius.input,
-    backgroundColor: colors.surface,
+  safe: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  rowPressed: { opacity: 0.7 },
-  rowText: { flex: 1, color: colors.title, fontFamily: fonts.regular, fontSize: 15 },
-  logout: { marginTop: 16 },
+  content: {
+    paddingBottom: 24,
+  },
+  profile: {
+    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: 28,
+  },
+  name: {
+    color: colors.title,
+    fontFamily: fonts.medium,
+    fontSize: 15,
+    marginTop: 18,
+  },
+  phone: {
+    color: colors.muted,
+    fontFamily: fonts.regular,
+    fontSize: 12,
+    marginTop: 4,
+  },
 });

@@ -12,7 +12,6 @@ import { queryClient } from '@/lib/queryClient';
 function RootNavigator() {
   const { status } = useAuth();
 
-  // Keep the splash screen up until the stored session has been checked.
   if (status === 'loading') return null;
 
   const signedIn = status === 'signedIn';

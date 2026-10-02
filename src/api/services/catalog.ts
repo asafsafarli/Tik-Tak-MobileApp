@@ -6,7 +6,6 @@ export const productService = {
   getById: (id: number) => api.get<Product>(`/products/${id}`),
 
   favorites: () => api.get<Product[]>('/products/favorites'),
-  /** Toggles: adds the product to favorites, or removes it if already there. */
   toggleFavorite: (id: number) => api.post<null>(`/products/${id}/favorite`),
 };
 

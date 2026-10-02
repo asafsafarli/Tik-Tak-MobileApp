@@ -12,7 +12,7 @@ const REDIRECT_DELAY_MS = 3000;
 export default function OrderSuccessScreen() {
   const goToOrders = useCallback(() => {
     router.dismissAll();
-    router.navigate('/account/orders');
+    router.navigate('/account/orders', { withAnchor: true });
   }, []);
 
   useEffect(() => {

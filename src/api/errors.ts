@@ -3,9 +3,7 @@ import { isAxiosError } from 'axios';
 import type { ApiErrorBody } from './types';
 
 export class ApiError extends Error {
-  /** HTTP status, or 0 for network/timeout errors. */
   readonly status: number;
-  /** All validation messages; `message` is these joined. */
   readonly messages: string[];
 
   constructor(status: number, messages: string[]) {

@@ -9,7 +9,6 @@ import { Avatar } from './Avatar';
 
 const SIZE = 120;
 
-/** Profile picture with a camera badge; tapping it changes the photo. */
 export function AvatarPicker() {
   const { profile } = useAuth();
   const { pickAndUpload, uploading } = useAvatarUpload();

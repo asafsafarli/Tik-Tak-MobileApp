@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
 import {
   authService,
@@ -28,13 +36,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const signOutLocally = useCallback(() => {
-    // Drop the previous user's cached basket, favorites, etc.
     queryClient.clear();
     setProfile(null);
     setStatus('signedOut');
   }, []);
 
-  // Restore the session on app start; fetching the profile also validates the token.
   useEffect(() => {
     setSessionExpiredListener(signOutLocally);
 

@@ -6,7 +6,6 @@ import { colors, fonts, spacing } from '@/constants/theme';
 
 interface ScreenHeaderProps {
   title: string;
-  /** Defaults to going back one screen. */
   onBack?: () => void;
   showBack?: boolean;
 }

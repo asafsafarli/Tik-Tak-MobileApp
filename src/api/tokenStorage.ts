@@ -6,7 +6,6 @@ import type { Tokens } from './types';
 const ACCESS_KEY = 'tiktak.access_token';
 const REFRESH_KEY = 'tiktak.refresh_token';
 
-// SecureStore is unavailable on web, so keep tokens in memory there.
 const memory = new Map<string, string>();
 const isWeb = Platform.OS === 'web';
 

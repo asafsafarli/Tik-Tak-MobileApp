@@ -11,7 +11,6 @@ export function useOrder(id: number) {
   return useQuery({
     queryKey: queryKeys.order(id),
     queryFn: () => orderService.getById(id),
-    // Show the copy from the orders list instantly while the detail loads.
     placeholderData: () =>
       queryClient.getQueryData<Order[]>(queryKeys.orders)?.find((order) => order.id === id),
   });
@@ -21,7 +20,6 @@ export function useCheckout() {
   return useMutation({
     mutationFn: (payload: CheckoutPayload) => orderService.checkout(payload),
     onSuccess: () => {
-      // The server empties the basket after checkout.
       queryClient.setQueryData<Basket>(queryKeys.basket, { items: [], total: '0.00', count: 0 });
       queryClient.invalidateQueries({ queryKey: queryKeys.orders });
     },

@@ -13,11 +13,9 @@ interface CategoryChipsProps {
 export function CategoryChips({ categories, selectedId, onSelect }: CategoryChipsProps) {
   const { width: screenWidth } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
-  // Chips have different widths, so measure each one to know where to scroll.
   const layouts = useRef(new Map<number, { x: number; width: number }>());
   const [measured, setMeasured] = useState(0);
 
-  // Bring the selected chip to the middle of the row.
   useEffect(() => {
     if (selectedId == null) return;
     const chip = layouts.current.get(selectedId);

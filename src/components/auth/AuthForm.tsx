@@ -7,13 +7,10 @@ import { colors, fonts, spacing } from '@/constants/theme';
 interface AuthFormProps {
   title: string;
   error?: string | null;
-  /** Input fields */
   children: ReactNode;
-  /** Submit button + switch link */
   footer: ReactNode;
 }
 
-/** Shared layout for the login and signup screens. */
 export function AuthForm({ title, error, children, footer }: AuthFormProps) {
   return (
     <SafeAreaView style={styles.safe}>

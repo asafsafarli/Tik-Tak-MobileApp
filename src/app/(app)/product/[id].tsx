@@ -32,7 +32,7 @@ export default function ProductSheet() {
             <Ionicons
               name={product.is_favorite ? 'heart' : 'heart-outline'}
               size={26}
-              color={product.is_favorite ? colors.danger : colors.title}
+              color={product.is_favorite ? colors.primary : colors.title}
             />
           </Pressable>
 

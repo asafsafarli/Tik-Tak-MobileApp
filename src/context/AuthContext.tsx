@@ -8,6 +8,7 @@ import {
   type Profile,
   type SignupPayload,
 } from '@/api';
+import { queryClient } from '@/lib/queryClient';
 
 type AuthStatus = 'loading' | 'signedIn' | 'signedOut';
 
@@ -27,6 +28,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const signOutLocally = useCallback(() => {
+    // Drop the previous user's cached basket, favorites, etc.
+    queryClient.clear();
     setProfile(null);
     setStatus('signedOut');
   }, []);

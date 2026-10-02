@@ -1,21 +1,21 @@
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import Feather from '@expo/vector-icons/Feather';
+import { router } from 'expo-router';
+import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { Order } from '@/api';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingView } from '@/components/ui/LoadingView';
-import { colors, fonts, radius, spacing } from '@/constants/theme';
+import { colors, fonts, spacing } from '@/constants/theme';
 import { useOrders } from '@/hooks/useOrders';
-import { formatDateTime, formatPrice, orderStatusLabel } from '@/utils/format';
 
-// Temporary layout until the orders design is ready.
 export default function OrdersScreen() {
   const { data: orders = [], isPending, isRefetching, refetch } = useOrders();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScreenHeader title="Sifarişlərim" />
+      <ScreenHeader title="Sifariş tarixçəsi" />
       <FlatList
         data={orders}
         keyExtractor={(item) => String(item.id)}
@@ -24,44 +24,71 @@ export default function OrdersScreen() {
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
         }
-        ListEmptyComponent={isPending ? <LoadingView /> : <EmptyState message="Hələ sifarişiniz yoxdur" />}
+        ListEmptyComponent={
+          isPending ? <LoadingView /> : <EmptyState message="Hələ sifarişiniz yoxdur" />
+        }
       />
     </SafeAreaView>
   );
 }
 
 function OrderRow({ order }: { order: Order }) {
-  const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
-
   return (
-    <View style={styles.card}>
-      <View style={styles.cardTop}>
-        <Text style={styles.number}>{order.orderNumber}</Text>
-        <Text style={styles.status}>{orderStatusLabel(order.status)}</Text>
-      </View>
-      <Text style={styles.meta}>{formatDateTime(order.createdAt)}</Text>
-      <View style={styles.cardTop}>
-        <Text style={styles.meta}>
-          {itemCount} məhsul · {order.paymentMethod === 'CASH' ? 'Nağd' : 'Kart'}
+    <Pressable
+      onPress={() => router.push({ pathname: '/order/[id]', params: { id: order.id } })}
+      style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
+      <View style={styles.numberCol}>
+        <Text style={styles.label}>No</Text>
+        <Text style={styles.value} numberOfLines={1}>
+          #{order.orderNumber.split('-').pop()}
         </Text>
-        <Text style={styles.total}>{formatPrice(order.total)}</Text>
       </View>
-    </View>
+      <View style={styles.addressCol}>
+        <Text style={styles.label}>Çatdırılma ünvanı</Text>
+        <Text style={styles.value} numberOfLines={1}>
+          {order.address}
+        </Text>
+      </View>
+      <Feather name="chevron-right" size={20} color={colors.title} />
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.screen, gap: 12, flexGrow: 1 },
-  card: {
-    padding: 16,
-    borderRadius: radius.card,
-    backgroundColor: colors.surface,
-    gap: 6,
+  safe: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  number: { color: colors.title, fontFamily: fonts.medium, fontSize: 15 },
-  status: { color: colors.primary, fontFamily: fonts.medium, fontSize: 13 },
-  meta: { color: colors.muted, fontFamily: fonts.regular, fontSize: 13 },
-  total: { color: colors.title, fontFamily: fonts.bold, fontSize: 15 },
+  list: {
+    paddingTop: 4,
+    flexGrow: 1,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.screen,
+    paddingVertical: 12,
+    gap: 16,
+  },
+  pressed: {
+    backgroundColor: colors.surface,
+  },
+  numberCol: {
+    width: 70,
+    gap: 3,
+  },
+  addressCol: {
+    flex: 1,
+    gap: 3,
+  },
+  label: {
+    color: colors.title,
+    fontFamily: fonts.regular,
+    fontSize: 11,
+  },
+  value: {
+    color: colors.text,
+    fontFamily: fonts.regular,
+    fontSize: 12,
+  },
 });

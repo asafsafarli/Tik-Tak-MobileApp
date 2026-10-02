@@ -1,26 +1,29 @@
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
 import type { Category } from '@/api';
 import { colors, fonts, radius, shadow } from '@/constants/theme';
 
-interface CategoryCardProps {
-  category: Category;
-  onPress: () => void;
-}
-
-export function CategoryCard({ category, onPress }: CategoryCardProps) {
+export const CategoryCard = memo(function CategoryCard({ category }: { category: Category }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => router.push({ pathname: '/products', params: { categoryId: category.id } })}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-      <Image source={category.img_url} style={styles.image} contentFit="contain" transition={200} />
+      <Image
+        source={category.img_url}
+        style={styles.image}
+        contentFit="contain"
+        transition={150}
+        cachePolicy="memory-disk"
+      />
       <Text style={styles.name} numberOfLines={2}>
         {category.name}
       </Text>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

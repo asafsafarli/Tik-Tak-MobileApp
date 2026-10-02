@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Product } from '@/api';
@@ -8,7 +9,7 @@ import { measureLabel } from '@/utils/format';
 import { ProductImage } from './ProductImage';
 import { ProductPrice } from './ProductPrice';
 
-export function SearchResultItem({ product }: { product: Product }) {
+export const SearchResultItem = memo(function SearchResultItem({ product }: { product: Product }) {
   return (
     <Pressable
       onPress={() => router.push({ pathname: '/product/[id]', params: { id: product.id } })}
@@ -22,7 +23,7 @@ export function SearchResultItem({ product }: { product: Product }) {
       </View>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: {

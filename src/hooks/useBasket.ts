@@ -13,20 +13,26 @@ export function useBasketQuantity(productId: number) {
   return data?.items.find((item) => item.product.id === productId)?.quantity ?? 0;
 }
 
-type BasketAction = 'add' | 'remove';
+type BasketAction = 'add' | 'remove' | 'removeAll';
 
-/** +1 / -1 for one product. Every basket endpoint returns the fresh basket, so we store it directly. */
+const basketRequests = {
+  add: basketService.add,
+  remove: basketService.remove,
+  removeAll: basketService.removeAll,
+};
+
+/** +1 / -1 / remove for one product. Every basket endpoint returns the fresh basket, so we store it directly. */
 export function useBasketActions(productId: number) {
   const mutation = useMutation({
     mutationKey: ['basket', productId],
-    mutationFn: (action: BasketAction) =>
-      action === 'add' ? basketService.add(productId) : basketService.remove(productId),
+    mutationFn: (action: BasketAction) => basketRequests[action](productId),
     onSuccess: (basket) => queryClient.setQueryData<Basket>(queryKeys.basket, basket),
   });
 
   return {
     add: () => mutation.mutate('add'),
     remove: () => mutation.mutate('remove'),
+    removeAll: () => mutation.mutate('removeAll'),
     isPending: mutation.isPending,
   };
 }

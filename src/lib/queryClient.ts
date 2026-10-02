@@ -16,4 +16,5 @@ export const queryKeys = {
   product: (id: number) => ['product', id] as const,
   favorites: ['favorites'] as const,
   basket: ['basket'] as const,
+  orders: ['orders'] as const,
 };

@@ -1,5 +1,5 @@
 import Feather from '@expo/vector-icons/Feather';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Product } from '@/api';
 import { colors, fonts } from '@/constants/theme';
@@ -11,10 +11,9 @@ interface AddToBasketProps {
   size?: 'small' | 'large';
 }
 
-/** "Səbətə əlavə et" button that turns into  [ − ] [ + 1 kq ]  once the product is in the basket. */
 export function AddToBasket({ product, size = 'small' }: AddToBasketProps) {
   const quantity = useBasketQuantity(product.id);
-  const { add, remove, isPending } = useBasketActions(product.id);
+  const { add, remove } = useBasketActions(product);
   const large = size === 'large';
   const height = large ? 46 : 30;
 
@@ -22,13 +21,8 @@ export function AddToBasket({ product, size = 'small' }: AddToBasketProps) {
     return (
       <Pressable
         onPress={add}
-        disabled={isPending}
         style={({ pressed }) => [styles.add, { height }, pressed && styles.pressed]}>
-        {isPending ? (
-          <ActivityIndicator color={colors.white} size="small" />
-        ) : (
-          <Text style={[styles.addText, large && styles.largeText]}>Səbətə əlavə et</Text>
-        )}
+        <Text style={[styles.addText, large && styles.largeText]}>Səbətə əlavə et</Text>
       </Pressable>
     );
   }
@@ -38,17 +32,21 @@ export function AddToBasket({ product, size = 'small' }: AddToBasketProps) {
       <Pressable
         accessibilityLabel="Azalt"
         onPress={remove}
-        disabled={isPending}
-        style={({ pressed }) => [styles.minus, { height, width: height }, pressed && styles.pressed]}>
+        style={({ pressed }) => [
+          styles.minus,
+          { height, width: height },
+          pressed && styles.pressed,
+        ]}>
         <Feather name="minus" size={large ? 20 : 16} color={colors.white} />
       </Pressable>
       <Pressable
         accessibilityLabel="Artır"
         onPress={add}
-        disabled={isPending}
         style={({ pressed }) => [styles.plus, { height }, pressed && styles.pressed]}>
         <Feather name="plus" size={large ? 20 : 16} color={colors.white} />
-        <Text style={[styles.addText, large && styles.largeText]}>1 {measureLabel(product.type)}</Text>
+        <Text style={[styles.addText, large && styles.largeText]}>
+          1 {measureLabel(product.type)}
+        </Text>
       </Pressable>
     </View>
   );

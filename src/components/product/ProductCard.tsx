@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
 import type { Product } from '@/api';
@@ -9,11 +10,9 @@ import { AddToBasket } from './AddToBasket';
 import { ProductImage } from './ProductImage';
 import { ProductPrice } from './ProductPrice';
 
-/** Gap between the two grid columns. */
 export const PRODUCT_GRID_GAP = 12;
 
-export function ProductCard({ product }: { product: Product }) {
-  // Fixed half width so a lone card in the last row doesn't stretch.
+export const ProductCard = memo(function ProductCard({ product }: { product: Product }) {
   const { width } = useWindowDimensions();
   const cardWidth = (width - spacing.screen * 2 - PRODUCT_GRID_GAP) / 2;
 
@@ -32,7 +31,7 @@ export function ProductCard({ product }: { product: Product }) {
       <AddToBasket product={product} />
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

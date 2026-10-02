@@ -3,11 +3,10 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, fonts, spacing } from '@/constants/theme';
-import { useBasket } from '@/hooks/useBasket';
+import { useBasketSummary } from '@/hooks/useBasket';
 
 export function AppHeader() {
-  const { data: basket } = useBasket();
-  const count = basket?.count ?? 0;
+  const { count } = useBasketSummary();
 
   return (
     <View style={styles.header}>

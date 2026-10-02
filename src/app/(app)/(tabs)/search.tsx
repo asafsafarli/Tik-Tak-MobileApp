@@ -1,16 +1,27 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  type ListRenderItem,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { Product } from '@/api';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { BasketBar, BASKET_BAR_HEIGHT } from '@/components/product/BasketBar';
 import { SearchResultItem } from '@/components/product/SearchResultItem';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingView } from '@/components/ui/LoadingView';
+import { gridListProps } from '@/constants/list';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
 import { useProducts } from '@/hooks/useCatalog';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+
+const renderResult: ListRenderItem<Product> = ({ item }) => <SearchResultItem product={item} />;
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -19,7 +30,7 @@ export default function SearchScreen() {
 
   const { products, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useProducts(
     { search },
-    { enabled: hasSearch },
+    { enabled: hasSearch, keepPrevious: true },
   );
 
   const renderEmpty = () => {
@@ -57,7 +68,8 @@ export default function SearchScreen() {
       <FlatList
         data={hasSearch ? products : []}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <SearchResultItem product={item} />}
+        renderItem={renderResult}
+        {...gridListProps}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         contentContainerStyle={styles.list}

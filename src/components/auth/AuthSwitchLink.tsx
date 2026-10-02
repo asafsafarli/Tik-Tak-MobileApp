@@ -9,7 +9,6 @@ interface AuthSwitchLinkProps {
   href: Href;
 }
 
-/** "Hesabınız varsa  Daxil olun" style footer under auth buttons. */
 export function AuthSwitchLink({ text, linkText, href }: AuthSwitchLinkProps) {
   return (
     <View style={styles.row}>

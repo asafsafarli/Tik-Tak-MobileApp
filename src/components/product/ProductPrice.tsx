@@ -5,7 +5,6 @@ import { colors, fonts } from '@/constants/theme';
 import { useBasketQuantity } from '@/hooks/useBasket';
 import { formatPrice, measureLabel } from '@/utils/format';
 
-/** "3.30 AZN", or "3 kq = 9.90 AZN" when the product is in the basket. */
 export function ProductPrice({ product, style }: { product: Product; style?: TextStyle }) {
   const quantity = useBasketQuantity(product.id);
 

@@ -26,7 +26,6 @@ export default function AccountInfoScreen() {
     if (!fullName.trim()) return setError('Ad və soyadınızı daxil edin.');
     if (!address.trim()) return setError('Ünvanınızı daxil edin.');
     if (email.trim() && !EMAIL_PATTERN.test(email.trim())) return setError('E-mail düzgün deyil.');
-    // The server does not compare the two passwords, so check here.
     if (password || passwordRepeat) {
       if (password.length < 4) return setError('Şifrə ən azı 4 simvol olmalıdır.');
       if (password !== passwordRepeat) return setError('Şifrələr eyni deyil.');
@@ -71,7 +70,6 @@ export default function AccountInfoScreen() {
             autoCapitalize="words"
           />
           <TextField label="Ünvan" placeholder="ünvan" value={address} onChangeText={setAddress} />
-          {/* The API does not allow changing the phone number. */}
           <TextField
             label="Telefon nömrəsi"
             value={profile?.phone ?? ''}

@@ -3,8 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '@/constants/theme';
 import { formatPrice } from '@/utils/format';
 
-/** "Ümumi / Çatdırılma" on the left, "Yekun məbləğ" on the right. */
-export function OrderTotals({ total, deliveryFee = 0 }: { total: string | number; deliveryFee?: number }) {
+export function OrderTotals({
+  total,
+  deliveryFee = 0,
+}: {
+  total: string | number;
+  deliveryFee?: number;
+}) {
   const final = Number(total) + deliveryFee;
 
   return (

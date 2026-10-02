@@ -11,13 +11,11 @@ export const http = create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Endpoints that must never trigger a token refresh (a 401 there means bad credentials).
 const AUTH_PATHS = ['/auth/login', '/auth/signup', '/auth/refresh'];
 
 type SessionExpiredListener = () => void;
 let onSessionExpired: SessionExpiredListener | null = null;
 
-/** Called when the refresh token is also rejected; use it to send the user to the login screen. */
 export function setSessionExpiredListener(listener: SessionExpiredListener | null) {
   onSessionExpired = listener;
 }
@@ -28,14 +26,12 @@ http.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Concurrent 401s share one refresh request.
 let refreshPromise: Promise<string> | null = null;
 
 async function refreshAccessToken(): Promise<string> {
   const refresh_token = await tokenStorage.getRefreshToken();
   if (!refresh_token) throw new Error('No refresh token');
 
-  // Plain axios call so it bypasses these interceptors.
   const { data } = await axios.post<ApiEnvelope<Tokens>>(
     `${API_BASE_URL}/auth/refresh`,
     { refresh_token },
@@ -48,7 +44,8 @@ async function refreshAccessToken(): Promise<string> {
 http.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const original = error.config as (InternalAxiosRequestConfig & { _retried?: boolean }) | undefined;
+    const original = error.config as
+      (InternalAxiosRequestConfig & { _retried?: boolean }) | undefined;
     const isAuthPath = AUTH_PATHS.some((p) => original?.url?.startsWith(p));
 
     if (error.response?.status !== 401 || !original || original._retried || isAuthPath) {
@@ -71,7 +68,6 @@ http.interceptors.response.use(
   },
 );
 
-/** Accepts both the `{ message, data, result }` envelope and a bare body (e.g. GET /orders/user/:id). */
 function unwrap<T>(body: ApiEnvelope<T> | T): T {
   if (body && typeof body === 'object' && 'result' in body && 'data' in body) {
     return (body as ApiEnvelope<T>).data;

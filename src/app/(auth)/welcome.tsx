@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
   hero: {
     alignItems: 'center',
     paddingTop: 50,
-    // The artwork leans right, so nudge it left like in the Figma frame.
     paddingRight: 48,
   },
   image: {

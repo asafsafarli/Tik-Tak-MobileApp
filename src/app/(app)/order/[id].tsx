@@ -39,8 +39,6 @@ export default function OrderSheet() {
         />
       </View>
 
-      {/* Plain View on purpose: a ScrollView inside a fitToContents sheet gets detached
-          and drawn over the content by the native sheet. */}
       <View>
         {order.items.map((item, index) => (
           <ItemRow key={item.id} item={item} last={index === order.items.length - 1} />

@@ -1,24 +1,43 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router, useLocalSearchParams } from 'expo-router';
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+  type ListRenderItem,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { Product } from '@/api';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { BasketBar, BASKET_BAR_HEIGHT } from '@/components/product/BasketBar';
 import { CategoryChips } from '@/components/product/CategoryChips';
 import { ProductCard } from '@/components/product/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingView } from '@/components/ui/LoadingView';
+import { gridListProps } from '@/constants/list';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
 import { useCategories, useProducts } from '@/hooks/useCatalog';
+
+const renderProduct: ListRenderItem<Product> = ({ item }) => <ProductCard product={item} />;
 
 export default function ProductsScreen() {
   const params = useLocalSearchParams<{ categoryId?: string }>();
   const categoryId = params.categoryId ? Number(params.categoryId) : undefined;
 
   const { data: categories = [] } = useCategories();
-  const { products, isPending, isRefetching, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useProducts({ categoryId });
+  const {
+    products,
+    isPending,
+    isRefetching,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useProducts({ categoryId });
 
   const backToCategories = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
@@ -49,11 +68,16 @@ export default function ProductsScreen() {
         numColumns={2}
         columnWrapperStyle={styles.column}
         contentContainerStyle={styles.list}
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={renderProduct}
+        {...gridListProps}
         onEndReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
         onEndReachedThreshold={0.5}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            tintColor={colors.primary}
+          />
         }
         ListEmptyComponent={
           isPending ? <LoadingView /> : <EmptyState message="Bu kateqoriyada məhsul yoxdur" />

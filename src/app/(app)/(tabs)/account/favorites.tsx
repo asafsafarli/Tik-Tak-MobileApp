@@ -1,13 +1,17 @@
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, type ListRenderItem } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { Product } from '@/api';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { BasketBar, BASKET_BAR_HEIGHT } from '@/components/product/BasketBar';
 import { ProductCard } from '@/components/product/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingView } from '@/components/ui/LoadingView';
+import { gridListProps } from '@/constants/list';
 import { colors, spacing } from '@/constants/theme';
 import { useFavorites } from '@/hooks/useCatalog';
+
+const renderProduct: ListRenderItem<Product> = ({ item }) => <ProductCard product={item} />;
 
 export default function FavoritesScreen() {
   const { data: favorites = [], isPending, isRefetching, refetch } = useFavorites();
@@ -21,9 +25,14 @@ export default function FavoritesScreen() {
         numColumns={2}
         columnWrapperStyle={styles.column}
         contentContainerStyle={styles.list}
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={renderProduct}
+        {...gridListProps}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            tintColor={colors.primary}
+          />
         }
         ListEmptyComponent={
           isPending ? <LoadingView /> : <EmptyState message="Siyahınızda məhsul yoxdur" />

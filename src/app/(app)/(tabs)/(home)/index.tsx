@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { useMemo } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,7 +23,7 @@ export default function HomeScreen() {
     campaigns.refetch();
   };
 
-  const rows = chunk(categories.data ?? [], COLUMNS);
+  const rows = useMemo(() => chunk(categories.data ?? [], COLUMNS), [categories.data]);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -44,15 +44,8 @@ export default function HomeScreen() {
             {rows.map((row, i) => (
               <View key={i} style={styles.row}>
                 {row.map((category) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    onPress={() =>
-                      router.push({ pathname: '/products', params: { categoryId: category.id } })
-                    }
-                  />
+                  <CategoryCard key={category.id} category={category} />
                 ))}
-                {/* Keep the last row's cards the same width as the others. */}
                 {Array.from({ length: COLUMNS - row.length }, (_, k) => (
                   <View key={`spacer-${k}`} style={styles.spacer} />
                 ))}

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "TikTak-MobileApp",
+    "name": "TikTak",
     "slug": "TikTak-MobileApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,6 +20,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-router",
+      "expo-image",
+      "expo-font"
+    ],
+    "scheme": "tiktak",
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

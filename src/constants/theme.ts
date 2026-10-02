@@ -1,9 +1,12 @@
 export const colors = {
   primary: '#8AC960',
   primaryPressed: '#78B550',
+  primaryLight: '#A1D67D',
+  primaryLightPressed: '#8FC96A',
   background: '#FFFFFF',
   inputBackground: '#F6F5FB',
   surface: '#F6F5FB',
+  surfaceAlt: '#FBFBFB',
   border: '#EFEFF4',
   title: '#2E3040',
   text: '#212121',

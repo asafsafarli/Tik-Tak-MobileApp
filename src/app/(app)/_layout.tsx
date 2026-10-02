@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-import { colors, fonts } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 
 export default function AppLayout() {
   return (
@@ -15,16 +15,10 @@ export default function AppLayout() {
           sheetCornerRadius: 24,
         }}
       />
-      <Stack.Screen
-        name="cart"
-        options={{
-          headerShown: true,
-          title: 'Səbət',
-          headerBackTitle: 'Geri',
-          headerTintColor: colors.title,
-          headerTitleStyle: { fontFamily: fonts.medium },
-        }}
-      />
+      <Stack.Screen name="cart" />
+      <Stack.Screen name="checkout" />
+      {/* No swipe back: the screen redirects to orders on its own. */}
+      <Stack.Screen name="order-success" options={{ gestureEnabled: false }} />
     </Stack>
   );
 }

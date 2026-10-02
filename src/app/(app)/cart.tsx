@@ -1,26 +1,80 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, fonts } from '@/constants/theme';
+import { BasketItemRow } from '@/components/basket/BasketItemRow';
+import { OrderTotals } from '@/components/basket/OrderTotals';
+import { ScreenHeader } from '@/components/layout/ScreenHeader';
+import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LoadingView } from '@/components/ui/LoadingView';
+import { colors, spacing } from '@/constants/theme';
 import { useBasket } from '@/hooks/useBasket';
-import { formatPrice } from '@/utils/format';
 
-// Placeholder until the basket design is ready.
 export default function CartScreen() {
-  const { data: basket } = useBasket();
+  const { data: basket, isPending } = useBasket();
+  const isEmpty = !basket || basket.items.length === 0;
 
   return (
-    <View style={styles.center}>
-      <Text style={styles.text}>Səbət dizaynı tezliklə</Text>
-      {basket && (
-        <Text style={styles.text}>
-          {basket.count} məhsul · {formatPrice(basket.total)}
-        </Text>
+    <SafeAreaView style={styles.safe}>
+      <ScreenHeader title="Səbətim" />
+
+      {isPending ? (
+        <LoadingView />
+      ) : (
+        <FlatList
+          data={basket?.items ?? []}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <BasketItemRow item={item} />}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          contentContainerStyle={styles.list}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <EmptyState message="Səbətinizdə məhsul yoxdur" />
+            </View>
+          }
+        />
       )}
-    </View>
+
+      {!isEmpty && (
+        <View style={styles.footer}>
+          <OrderTotals total={basket.total} />
+          <Button
+            title="Sifarişi tamamla"
+            onPress={() => router.push('/checkout')}
+            style={styles.button}
+          />
+        </View>
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 6 },
-  text: { color: colors.muted, fontFamily: fonts.regular, fontSize: 14 },
+  safe: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  list: {
+    paddingTop: 8,
+    flexGrow: 1,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+    marginHorizontal: spacing.screen,
+  },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingBottom: 120,
+  },
+  footer: {
+    paddingHorizontal: spacing.screen,
+    paddingTop: 12,
+    gap: 16,
+  },
+  button: {
+    backgroundColor: colors.primaryLight,
+  },
 });

@@ -18,7 +18,7 @@ export default function ProductsScreen() {
 
   const { data: categories = [] } = useCategories();
   const { products, isPending, isRefetching, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useProducts(categoryId);
+    useProducts({ categoryId });
 
   const backToCategories = () => (router.canGoBack() ? router.back() : router.replace('/'));
 

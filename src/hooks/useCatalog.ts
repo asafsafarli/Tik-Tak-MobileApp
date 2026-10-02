@@ -11,11 +11,17 @@ export function useCampaigns() {
   return useQuery({ queryKey: queryKeys.campaigns, queryFn: campaignService.list });
 }
 
-export function useProducts(categoryId?: number) {
+interface ProductFilters {
+  categoryId?: number;
+  search?: string;
+}
+
+export function useProducts({ categoryId, search }: ProductFilters, { enabled = true } = {}) {
   const query = useInfiniteQuery({
-    queryKey: queryKeys.products(categoryId),
+    queryKey: queryKeys.products({ categoryId, search }),
     queryFn: ({ pageParam }) =>
-      productService.list({ page: pageParam, limit: 20, category_id: categoryId }),
+      productService.list({ page: pageParam, limit: 20, category_id: categoryId, search }),
+    enabled,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.pagination.next ?? undefined,
   });

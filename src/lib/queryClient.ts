@@ -12,7 +12,7 @@ export const queryClient = new QueryClient({
 export const queryKeys = {
   categories: ['categories'] as const,
   campaigns: ['campaigns'] as const,
-  products: (categoryId?: number) => ['products', categoryId ?? 'all'] as const,
+  products: (filters: { categoryId?: number; search?: string }) => ['products', filters] as const,
   product: (id: number) => ['product', id] as const,
   favorites: ['favorites'] as const,
   basket: ['basket'] as const,

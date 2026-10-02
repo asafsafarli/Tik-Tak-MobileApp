@@ -34,6 +34,10 @@ export function useProduct(id: number) {
   return useQuery({ queryKey: queryKeys.product(id), queryFn: () => productService.getById(id) });
 }
 
+export function useFavorites() {
+  return useQuery({ queryKey: queryKeys.favorites, queryFn: productService.favorites });
+}
+
 export function useToggleFavorite(id: number) {
   return useMutation({
     mutationFn: () => productService.toggleFavorite(id),

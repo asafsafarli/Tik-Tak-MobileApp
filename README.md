@@ -28,9 +28,8 @@ TikTak e-commerce platformasının müştəri üçün mobil tətbiqi. Eyni kod h
 ## Tələblər
 
 - [Node.js](https://nodejs.org) 20.19.4 və ya daha yeni
-- **iOS üçün:** Xcode və iOS Simulator (yalnız macOS)
+- **iOS üçün:** Xcode, iOS Simulator və [CocoaPods](https://cocoapods.org) (yalnız macOS)
 - **Android üçün:** Android Studio, Android SDK və ən azı bir virtual cihaz (AVD)
-- Simulatorda **Expo Go** — ilk açılışda Expo onu özü quraşdırır
 
 ## Quraşdırma
 
@@ -40,22 +39,48 @@ cd Tik-Tak-MobileApp
 npm install
 ```
 
-### Android SDK yolu (bir dəfəlik)
+### Android SDK və Java yolu (bir dəfəlik)
 
 `~/.zshrc` faylına əlavə edin və terminalı yenidən açın:
 
 ```bash
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 ## İşə salmaq
 
+Layihə **development build** kimi işləyir: simulatorda Expo Go-dan ayrı, öz ikonu olan **TikTak** app-ı qurulur və birbaşa app-ın ilk ekranı açılır.
+
+### İlk dəfə (və ya native ayarlar dəyişəndə)
+
 ```bash
-npx expo start            # serveri başladır
-npx expo start --ios      # iOS simulatorunu açır və app-ı başladır
-npx expo start --android  # Android emulatorunu açır və app-ı başladır
+npm run ios       # iOS app-ı build edib simulatora qurur
+npm run android   # Android app-ı build edib emulatora qurur
 ```
+
+Bu əmrlər `ios/` və `android/` qovluqlarını yaradır (git-ə düşmür, əllə dəyişdirilmir). İlk build bir neçə dəqiqə çəkir.
+
+Yenidən build **yalnız** bu hallarda lazımdır:
+
+- native kodu olan paket əlavə ediləndə (kamera, xəritə, push bildiriş və s.)
+- `app.json` dəyişəndə (ad, ikon, splash, plugin-lər, icazə mətnləri)
+- Expo SDK versiyası yüksəldiləndə
+- simulatorda TikTak app-ı silinəndə və ya yeni cihaz istifadə ediləndə
+
+`src/` içindəki kod, yeni ekranlar, şəkillər və yalnız JavaScript paketləri üçün build lazım deyil — Fast Refresh kifayətdir.
+
+### Gündəlik iş
+
+```bash
+npm start
+```
+
+Sonra simulatorda **TikTak** ikonuna basın və ya terminalda `i` / `a` basın.
+
+> Expo Go ilə açmaq lazım olsa: `npx expo start --go`
 
 Server işləyərkən terminalda:
 
@@ -68,7 +93,7 @@ Server işləyərkən terminalda:
 
 Kodda dəyişiklik edib yadda saxlayanda app avtomatik yenilənir (Fast Refresh).
 
-> Yeni ekran (route faylı) əlavə edəndən və ya silələndən sonra app köhnə ekranı göstərirsə, serveri keşi təmizləyərək başladın: `npx expo start -c`
+> Yeni ekran (route faylı) əlavə edəndən və ya silələndən sonra app köhnə ekranı göstərirsə, serveri keşi təmizləyərək başladın: `npm start -- -c`
 
 ## Yoxlamalar
 

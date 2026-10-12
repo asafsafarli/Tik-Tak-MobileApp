@@ -23,6 +23,7 @@ export const fonts = {
   regular: 'Roboto_400Regular',
   medium: 'Roboto_500Medium',
   bold: 'Roboto_700Bold',
+  black: 'Roboto_900Black',
 } as const;
 
 export const spacing = {

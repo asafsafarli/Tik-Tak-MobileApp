@@ -4,7 +4,8 @@ TikTak e-commerce platformasının müştəri üçün mobil tətbiqi. Eyni kod h
 
 ## İmkanlar
 
-- **Giriş / Qeydiyyat** — telefon nömrəsi və parol ilə; sessiya telefonda təhlükəsiz saxlanılır və token vaxtı bitəndə avtomatik yenilənir
+- **Açılış animasiyası** — loqodan başlayan "tik-tak" intro: ekran yaşıla boyanır, məhsullar səbətə səpələnir, sonra app açılır (telefonda "Reduce Motion" açıqdırsa qısa keçid)
+- **Giriş / Qeydiyyat** — telefon nömrəsi (`+994` prefiksi hazırdır) və parol ilə; sessiya telefonda təhlükəsiz saxlanılır və token vaxtı bitəndə avtomatik yenilənir
 - **Əsas səhifə** — çatdırılma ünvanı, kampaniya banneri, kateqoriyalar
 - **Məhsullar** — kateqoriyaya görə siyahı, səhifələmə (infinite scroll), məhsul detalı (bottom sheet)
 - **Axtarış** — yazdıqca nəticələr
@@ -95,6 +96,38 @@ Kodda dəyişiklik edib yadda saxlayanda app avtomatik yenilənir (Fast Refresh)
 
 > Yeni ekran (route faylı) əlavə edəndən və ya silələndən sonra app köhnə ekranı göstərirsə, serveri keşi təmizləyərək başladın: `npm start -- -c`
 
+## Telefona quraşdırmaq
+
+### Android — APK
+
+```bash
+cd android && ./gradlew assembleRelease
+```
+
+Fayl: `android/app/build/outputs/apk/release/app-release.apk`. JavaScript kodu APK-nın içindədir, app serversiz işləyir.
+
+APK-nı telefona göndərin (Telegram, Google Drive, USB kabel) və açın. Android "naməlum mənbə" üçün icazə istəyəcək — həmin app üçün icazə verin, sonra **Quraşdır**.
+
+> APK Android-in standart debug açarı ilə imzalanır: test və paylaşmaq üçün uyğundur, **Google Play üçün deyil**. Play Store üçün öz imza açarınız (keystore) lazımdır.
+
+### iPhone — kabel ilə
+
+Pulsuz Apple ID kifayətdir. Bir dəfəlik hazırlıq:
+
+1. **Xcode → Settings → Accounts** → "+" → Apple ID ilə daxil olun
+2. iPhone-u kabellə qoşun, telefonda **Trust This Computer** → **Trust**
+3. iPhone-da **Settings → Privacy & Security → Developer Mode** → aktiv edin (telefon yenidən başlayır). Bu seçim telefon Xcode-a ilk dəfə qoşulandan sonra görünür.
+
+Quraşdırma:
+
+```bash
+npx expo run:ios --device --configuration Release
+```
+
+İlk açılışda iPhone-da: **Settings → General → VPN & Device Management** → öz Apple ID-niz → **Trust**.
+
+> Pulsuz Apple ID ilə app **7 gün** işləyir, sonra eyni əmrlə yenidən quraşdırılır. Developer Mode açıq qalmalıdır — söndürüləndə app açılmır. Daimi quraşdırma və TestFlight üçün Apple Developer Program (illik 99$) lazımdır.
+
 ## Yoxlamalar
 
 ```bash
@@ -120,7 +153,7 @@ src/
 │       ├── checkout        # Sifarişi tamamla
 │       └── order-success   # Uğurlu sifariş
 ├── api/                    # API qatı: client, servislər, tiplər
-├── components/             # Təkrar istifadə olunan UI komponentləri
+├── components/             # Təkrar istifadə olunan UI komponentləri (intro/ — açılış animasiyası)
 ├── context/                # AuthContext (sessiya vəziyyəti)
 ├── hooks/                  # React Query hook-ları (səbət, kataloq, sifarişlər)
 ├── lib/                    # React Query client
@@ -141,7 +174,7 @@ Bütün sorğular `Authorization: Bearer <access_token>` başlığı ilə gönd�
 
 Backend-in bilinməli xüsusiyyətləri:
 
-- Telefon nömrəsi `+994XXXXXXXXX` formatında göndərilir; app istifadəçinin yazdığını (`050 123 45 67` və s.) özü çevirir
+- Telefon nömrəsi `+994XXXXXXXXX` formatında göndərilir; istifadəçi `+994`-dən sonrakı hissəni yazır (`50 123 45 67`), app nömrəni özü çevirir (`050...` və tam `+994...` də qəbul olunur)
 - Qeydiyyat token qaytarmır — app qeydiyyatdan sonra avtomatik login edir
 - `PUT /profile` üçün `full_name` və `address` mütləqdir; telefon dəyişdirilmir
 - Server şifrə ilə şifrə təkrarını müqayisə etmir — bu yoxlama app-da edilir

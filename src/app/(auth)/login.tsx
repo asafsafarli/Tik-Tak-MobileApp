@@ -16,7 +16,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   const submit = async () => {
-    if (!isValidPhone(phone)) return setError('Telefon nömrəsini düzgün daxil edin (məs. 050 123 45 67).');
+    if (!isValidPhone(phone)) return setError('Telefon nömrəsini düzgün daxil edin (məs. 50 123 45 67).');
     if (!password) return setError('Parolu daxil edin.');
 
     setError(null);
@@ -41,7 +41,8 @@ export default function LoginScreen() {
       }>
       <TextField
         label="Telefon"
-        placeholder="telefon"
+        prefix="+994"
+        placeholder="50 123 45 67"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"

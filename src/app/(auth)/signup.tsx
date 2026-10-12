@@ -18,7 +18,7 @@ export default function SignupScreen() {
 
   const submit = async () => {
     if (!fullName.trim()) return setError('Ad və soyadınızı daxil edin.');
-    if (!isValidPhone(phone)) return setError('Telefon nömrəsini düzgün daxil edin (məs. 050 123 45 67).');
+    if (!isValidPhone(phone)) return setError('Telefon nömrəsini düzgün daxil edin (məs. 50 123 45 67).');
     if (password.length < 4) return setError('Parol ən azı 4 simvol olmalıdır.');
 
     setError(null);
@@ -52,7 +52,8 @@ export default function SignupScreen() {
       />
       <TextField
         label="Telefon"
-        placeholder="telefon"
+        prefix="+994"
+        placeholder="50 123 45 67"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
